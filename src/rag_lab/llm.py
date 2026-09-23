@@ -21,6 +21,9 @@ DEFAULT_TIMEOUT_SECONDS = 120.0
 # local de 3B en CPU, un timeout o una conexión rechazada casi siempre se repite, así
 # que reintentar solo multiplica la espera antes de fallar.
 DEFAULT_MAX_RETRIES = 0
+# La comprobación de disponibilidad solo lista modelos (no genera): si en 10 s no hay
+# respuesta, el servidor no está en condiciones de evaluar.
+CHECK_TIMEOUT_SECONDS = 10.0
 
 
 class LLMError(Exception):
@@ -54,6 +57,32 @@ class OpenAICompatibleClient:
             timeout=timeout,
             max_retries=max_retries,
         )
+
+    def check_available(self) -> None:
+        """Comprueba barato (lista de modelos, sin generar) que el servidor responde y
+        tiene `self.model`; si no, lanza `LLMError`.
+
+        El modelo cuenta como disponible si su id aparece tal cual o, cuando el nombre
+        no lleva etiqueta (sin `:`), como `<model>:latest`, que es como Ollama lista
+        los modelos descargados sin etiqueta explícita.
+        """
+        try:
+            page = self._client.with_options(timeout=CHECK_TIMEOUT_SECONDS).models.list()
+        except openai.OpenAIError as exc:
+            raise LLMError(
+                f"No se pudo listar los modelos del servidor para {self.model!r}: "
+                f"{type(exc).__name__}: {exc}"
+            ) from exc
+        listed = {model.id for model in page.data}
+        accepted = {self.model}
+        if ":" not in self.model:
+            accepted.add(f"{self.model}:latest")
+        if listed.isdisjoint(accepted):
+            available = ", ".join(sorted(listed)) or "ninguno"
+            raise LLMError(
+                f"El modelo {self.model!r} no está disponible en el servidor (modelos: "
+                f"{available}). Descárgalo con `ollama pull {self.model}`."
+            )
 
     def complete(self, system: str, user: str, json_mode: bool = False) -> str:
         """Devuelve el texto de la respuesta; cualquier fallo del SDK se convierte en `LLMError`.

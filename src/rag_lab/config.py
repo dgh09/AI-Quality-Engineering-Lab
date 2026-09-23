@@ -71,6 +71,12 @@ class Settings:
     pass_rate_threshold: float
 
     def __post_init__(self) -> None:
+        for name, model in (
+            ("GENERATOR_MODEL", self.generator_model),
+            ("JUDGE_MODEL", self.judge_model),
+        ):
+            if not model.strip():
+                raise ValueError(f"{name} no puede estar vacío, se recibió {model!r}")
         if not self.relevance_threshold > 0:
             raise ValueError(
                 f"RELEVANCE_THRESHOLD debe ser > 0, se recibió {self.relevance_threshold}"

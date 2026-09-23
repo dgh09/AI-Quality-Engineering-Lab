@@ -140,7 +140,7 @@ Formato: **ID — título** · depende de · verificación.
   `report.render_markdown(before, after) -> str`: tabla de métricas deterministas (contaminación, abstención) antes/después y, si existen, tabla de evaluación LLM por caso (tasa de éxito, pasa/no pasa, justificación breve del juez).
   *Verificación*: `pytest tests/test_report.py` — contiene secciones "Antes (shared)" y "Después (isolated)", números esperados, y omite la sección LLM si no hay resultados.
 
-- [ ] **T13 — CLI** · depende de: T12
+- [x] **T13 — CLI** · depende de: T12
   `python -m rag_lab --out reports/report.md` corre métricas deterministas en ambos modos y escribe el reporte; `--with-llm` añade la evaluación con juez. Si Ollama no responde, mensaje claro y código de salida ≠ 0.
   *Verificación*: `pytest tests/test_cli.py` (modo determinista sobre `tmp_path`) y `.venv\Scripts\python -m rag_lab --out reports/report.md` crea el archivo con contaminación > 0 antes y = 0 después.
 

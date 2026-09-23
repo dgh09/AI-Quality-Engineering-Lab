@@ -72,13 +72,17 @@ class RagAgent:
     datos (`VectorStore.query(..., agent_id=...)`); con `isolated=False` usa el
     modo shared (sin filtro, con el bug de contaminación). El prompt es el mismo
     en ambos modos.
+
+    `llm=None` crea un agente solo de recuperación: `retrieve` funciona igual (nunca
+    usa el LLM) y `ask` lanza `RuntimeError`. Es lo que usa la CLI para las métricas
+    deterministas, sin construir ningún cliente LLM.
     """
 
     def __init__(
         self,
         agent_id: str,
         store: VectorStore,
-        llm: LLMClient,
+        llm: LLMClient | None,
         threshold: float,
         top_k: int,
         isolated: bool = False,
@@ -107,7 +111,16 @@ class RagAgent:
         return Retrieval(retrieved=retrieved, context=select_context(retrieved, self.threshold))
 
     def ask(self, question: str) -> AgentResponse:
-        """Recupera top-k, aplica la compuerta de abstención y, si pasa, llama al LLM."""
+        """Recupera top-k, aplica la compuerta de abstención y, si pasa, llama al LLM.
+
+        Sin cliente LLM (`llm=None`) lanza `RuntimeError` antes de recuperar: es un
+        error de programación, no un fallo del LLM (no es `LLMError`).
+        """
+        if self._llm is None:
+            raise RuntimeError(
+                f"RagAgent({self.agent_id!r}) se creó sin cliente LLM (solo recuperación); "
+                "usa retrieve() o pásale un LLMClient"
+            )
         retrieval = self.retrieve(question)
         retrieved, context = retrieval.retrieved, retrieval.context
         if not context:

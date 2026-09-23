@@ -168,3 +168,14 @@ def test_non_finite_float_raises(
 
     with pytest.raises(ValueError, match=name):
         Settings.from_env(env_file=None)
+
+
+@pytest.mark.parametrize("name", ["GENERATOR_MODEL", "JUDGE_MODEL"])
+@pytest.mark.parametrize("value", ["", "   "], ids=["empty", "blank"])
+def test_empty_or_blank_model_name_raises_naming_the_variable(
+    clean_env: pytest.MonkeyPatch, name: str, value: str
+) -> None:
+    clean_env.setenv(name, value)
+
+    with pytest.raises(ValueError, match=name):
+        Settings.from_env(env_file=None)
