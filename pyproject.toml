@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag_lab"
+version = "0.1.0"
+description = "Laboratorio de calidad para un RAG multi-agente"
+requires-python = ">=3.11"
+dependencies = [
+    "chromadb>=1.5",
+    "openai>=1.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not llm_eval' --strict-markers"
+markers = [
+    "llm_eval: evaluaciones que llaman a un LLM real; se corren con -m llm_eval",
+]
