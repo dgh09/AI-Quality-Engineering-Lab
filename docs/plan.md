@@ -108,7 +108,7 @@ Formato: **ID — título** · depende de · verificación.
   `agent.RagAgent(agent_id, store, llm, threshold, top_k, isolated: bool)` → `AgentResponse(answer, abstained, retrieved, context)` (`retrieved` = todo el top-k; `context` = los chunks con `distance <= threshold` que ve el LLM). Si ningún chunk tiene `distance <= threshold`, se abstiene con un mensaje fijo **sin llamar al LLM**. Si no, construye el prompt con los chunks relevantes y llama a `llm.complete`. En esta tarea `isolated` todavía no filtra (`isolated=True` lanza `NotImplementedError` al construir el agente). El prompt pide responder exactamente `ABSTENTION_MESSAGE` si el contexto no tiene la respuesta. `FakeLLM` vive en `tests/fakes.py`.
   *Verificación*: `pytest tests/test_agent.py` — con `FakeLLM`: abstiene y no llama al LLM cuando todo está lejos; responde y pasa el contexto al LLM cuando hay chunks cercanos.
 
-- [ ] **T6 — Detector y pruebas que reproducen la contaminación** · depende de: T3, T5
+- [x] **T6 — Detector y pruebas que reproducen la contaminación** · depende de: T3, T5
   `contamination.foreign_chunks(chunks, agent_id)`. `tests/test_isolation.py` con las aserciones **correctas** parametrizadas por modo; en esta tarea solo existe el modo `shared`, marcado `xfail(strict=True, reason="BUG: vector store compartido sin aislamiento")`:
   (a) ningún chunk recuperado por el agente faq tiene `agent_id != "faq"` para las preguntas del golden set del agente faq;
   (b) el agente faq se abstiene en la pregunta de dominio cruzado.
