@@ -34,6 +34,7 @@ MODES = [
             reason="BUG: vector store compartido sin aislamiento por agent_id",
         ),
     ),
+    "isolated",
 ]
 
 GOLDEN_SET: list[GoldenCase] = load_golden_set()

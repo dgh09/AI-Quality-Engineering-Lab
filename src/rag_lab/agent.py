@@ -58,8 +58,10 @@ def select_context(retrieved: Sequence[Chunk], threshold: float) -> tuple[Chunk,
 class RagAgent:
     """Agente RAG de un `agent_id` concreto sobre un `VectorStore` y un `LLMClient`.
 
-    `isolated=True` todavía no está implementado (T7 lo implementa en la capa de
-    datos) y lanza `NotImplementedError` al construir, antes de cualquier consulta.
+    Con `isolated=True` la recuperación se filtra por `agent_id` en la capa de
+    datos (`VectorStore.query(..., agent_id=...)`); con `isolated=False` usa el
+    modo shared (sin filtro, con el bug de contaminación). El prompt es el mismo
+    en ambos modos.
     """
 
     def __init__(
@@ -77,11 +79,6 @@ class RagAgent:
             raise ValueError(f"threshold debe ser > 0, se recibió {threshold}")
         if top_k < 1:
             raise ValueError(f"top_k debe ser >= 1, se recibió {top_k}")
-        if isolated:
-            raise NotImplementedError(
-                "el modo isolated aún no está implementado (se implementa en T7, en la "
-                "capa de datos)"
-            )
         self.agent_id = agent_id
         self.threshold = threshold
         self.top_k = top_k
@@ -91,7 +88,8 @@ class RagAgent:
 
     def ask(self, question: str) -> AgentResponse:
         """Recupera top-k, aplica la compuerta de abstención y, si pasa, llama al LLM."""
-        retrieved = tuple(self._store.query(question, k=self.top_k))
+        agent_filter = self.agent_id if self.isolated else None
+        retrieved = tuple(self._store.query(question, k=self.top_k, agent_id=agent_filter))
         context = select_context(retrieved, self.threshold)
         if not context:
             return AgentResponse(

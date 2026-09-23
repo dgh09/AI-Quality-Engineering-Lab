@@ -19,10 +19,18 @@ def documents() -> list[Document]:
 
 
 @pytest.fixture(scope="session")
-def chroma_client() -> chromadb.ClientAPI:
-    # Los EphemeralClient de un mismo proceso pueden compartir estado en memoria;
-    # por eso cada prueba usa su propia colección (ver `store`).
-    return chromadb.EphemeralClient()
+def chroma_client(tmp_path_factory: pytest.TempPathFactory) -> chromadb.ClientAPI:
+    """Cliente Chroma para las colecciones temporales de la fixture `store`.
+
+    Es un `PersistentClient` en su propio directorio temporal, distinto del de
+    `indexed_store`. En chromadb 1.5.9, crear y borrar (`delete_collection`)
+    colecciones repetidamente en un cliente compartido termina corrompiendo el
+    segmento HNSW de OTRA colección del mismo cliente (observado tras ~55 ciclos:
+    `query` devuelve `[]` o `InternalError: Error creating hnsw segment reader`).
+    Por eso los borrados quedan confinados a este cliente. No se usa
+    `EphemeralClient`: dentro de un proceso comparten estado y no aíslan.
+    """
+    return chromadb.PersistentClient(path=str(tmp_path_factory.mktemp("chroma-store")))
 
 
 @pytest.fixture
@@ -35,19 +43,19 @@ def store(chroma_client: chromadb.ClientAPI) -> Iterator[VectorStore]:
 
 @pytest.fixture(scope="session")
 def indexed_store(
-    chroma_client: chromadb.ClientAPI, documents: list[Document]
-) -> Iterator[VectorStore]:
+    tmp_path_factory: pytest.TempPathFactory, documents: list[Document]
+) -> VectorStore:
     """VectorStore de SOLO LECTURA con los documentos reales, indexado una vez por sesión.
 
-    Usa su propia colección de nombre único, que se borra al final de la sesión.
-    Las pruebas que indexan o modifican el store deben usar la fixture `store`
-    (de ámbito función), nunca esta.
+    Vive en un `PersistentClient` dedicado (directorio temporal propio) del que
+    nunca se borra ninguna colección, aislado de los `delete_collection` de la
+    fixture `store` (ver `chroma_client`). Las pruebas que indexan o modifican el
+    store deben usar `store` (de ámbito función), nunca esta.
     """
-    name = f"test-indexed-{uuid.uuid4().hex}"
-    vector_store = VectorStore(chroma_client, collection_name=name)
+    client = chromadb.PersistentClient(path=str(tmp_path_factory.mktemp("chroma-indexed")))
+    vector_store = VectorStore(client, collection_name="test-indexed")
     vector_store.index(documents)
-    yield vector_store
-    chroma_client.delete_collection(name)
+    return vector_store
 
 
 @pytest.fixture

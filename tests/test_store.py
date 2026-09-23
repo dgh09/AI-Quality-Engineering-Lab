@@ -24,7 +24,7 @@ def test_reindex_is_idempotent(store: VectorStore, documents: list[Document]) ->
 def test_query_returns_k_chunks_sorted_by_distance(
     indexed_store: VectorStore, documents: list[Document], k: int
 ) -> None:
-    chunks = indexed_store.query(SHIPPING_QUESTION, k=k)
+    chunks = indexed_store.query(SHIPPING_QUESTION, k=k, agent_id=None)
 
     assert len(chunks) == k
     assert all(isinstance(c, Chunk) for c in chunks)
@@ -41,11 +41,11 @@ def test_query_returns_k_chunks_sorted_by_distance(
 def test_query_k_larger_than_store_returns_all(
     indexed_store: VectorStore, documents: list[Document]
 ) -> None:
-    assert len(indexed_store.query(SHIPPING_QUESTION, k=50)) == len(documents)
+    assert len(indexed_store.query(SHIPPING_QUESTION, k=50, agent_id=None)) == len(documents)
 
 
 def test_shipping_question_retrieves_shipping_doc_first(indexed_store: VectorStore) -> None:
-    top = indexed_store.query(SHIPPING_QUESTION, k=3)[0]
+    top = indexed_store.query(SHIPPING_QUESTION, k=3, agent_id=None)[0]
     assert top.id == "faq-01"
     assert top.agent_id == "faq"
 
@@ -57,20 +57,58 @@ def test_store_has_no_agent_isolation_bug(indexed_store: VectorStore) -> None:
     de `seguimiento` en top-1. Cuando T7 añada el filtro por agent_id, esta
     prueba seguirá siendo válida para la llamada sin filtro.
     """
-    top = indexed_store.query(VACATION_QUESTION, k=3)[0]
+    top = indexed_store.query(VACATION_QUESTION, k=3, agent_id=None)[0]
     assert top.agent_id == "seguimiento"
 
 
 @pytest.mark.parametrize("k", [0, -1])
 def test_query_rejects_k_below_one(indexed_store: VectorStore, k: int) -> None:
     with pytest.raises(ValueError, match="k"):
-        indexed_store.query(SHIPPING_QUESTION, k=k)
+        indexed_store.query(SHIPPING_QUESTION, k=k, agent_id=None)
 
 
 def test_query_on_empty_store_returns_empty_list(store: VectorStore) -> None:
-    assert store.query(SHIPPING_QUESTION, k=3) == []
+    assert store.query(SHIPPING_QUESTION, k=3, agent_id=None) == []
 
 
 def test_query_on_empty_store_still_validates_k(store: VectorStore) -> None:
     with pytest.raises(ValueError):
-        store.query(SHIPPING_QUESTION, k=0)
+        store.query(SHIPPING_QUESTION, k=0, agent_id=None)
+
+
+# --- Filtro por agent_id (arreglo T7) ------------------------------------------------
+
+
+def test_query_with_agent_id_returns_only_that_agents_chunks(indexed_store: VectorStore) -> None:
+    # Sin filtro, el top-1 de esta pregunta es de `seguimiento` (ver la prueba del bug).
+    chunks = indexed_store.query(VACATION_QUESTION, k=3, agent_id="faq")
+
+    assert len(chunks) == 3
+    assert {c.agent_id for c in chunks} == {"faq"}
+    distances = [c.distance for c in chunks]
+    assert distances == sorted(distances)
+
+
+@pytest.mark.parametrize("agent_id", AGENT_IDS)
+def test_query_with_agent_id_and_large_k_returns_exactly_that_agents_docs(
+    indexed_store: VectorStore, documents: list[Document], agent_id: str
+) -> None:
+    own_ids = {d.id for d in documents if d.agent_id == agent_id}
+    assert len(own_ids) == 8, "precondición: cada agente tiene 8 documentos"
+
+    chunks = indexed_store.query(SHIPPING_QUESTION, k=50, agent_id=agent_id)
+
+    assert len(chunks) == len(own_ids)
+    assert {c.id for c in chunks} == own_ids
+
+
+def test_query_rejects_unknown_agent_id(indexed_store: VectorStore) -> None:
+    with pytest.raises(ValueError, match="agent_id"):
+        indexed_store.query(SHIPPING_QUESTION, k=3, agent_id="ventas")
+
+
+def test_query_without_agent_id_keeps_shared_behavior(indexed_store: VectorStore) -> None:
+    # `agent_id=None` conserva el modo shared (con el bug) para el informe antes/después.
+    chunks = indexed_store.query(VACATION_QUESTION, k=50, agent_id=None)
+
+    assert {c.agent_id for c in chunks} == set(AGENT_IDS)

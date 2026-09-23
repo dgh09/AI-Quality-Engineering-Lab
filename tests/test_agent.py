@@ -33,7 +33,9 @@ def test_agent_abstains_without_calling_llm_when_no_chunk_is_within_threshold(
 ) -> None:
     # Umbral derivado de las distancias reales: la mitad de la mínima, así que
     # ningún chunk puede pasar la compuerta.
-    min_distance = min(c.distance for c in indexed_store.query(SHIPPING_QUESTION, k=TOP_K))
+    min_distance = min(
+        c.distance for c in indexed_store.query(SHIPPING_QUESTION, k=TOP_K, agent_id=None)
+    )
     assert min_distance > 0, "precondición: se necesita una distancia mínima positiva"
     tiny_threshold = min_distance / 2
     agent = RagAgent("faq", indexed_store, fake_llm, threshold=tiny_threshold, top_k=TOP_K)
@@ -70,7 +72,7 @@ def test_agent_answers_from_close_chunks_calling_llm_once(
 def test_context_excludes_chunks_above_threshold(
     indexed_store: VectorStore, fake_llm: FakeLLM
 ) -> None:
-    ranked = indexed_store.query(SHIPPING_QUESTION, k=TOP_K)
+    ranked = indexed_store.query(SHIPPING_QUESTION, k=TOP_K, agent_id=None)
     top1, top2 = ranked[0].distance, ranked[1].distance
     assert top1 < top2, "se necesitan distancias distintas para separar top-1 de top-2"
     threshold = (top1 + top2) / 2
@@ -144,9 +146,21 @@ def test_invalid_constructor_arguments_raise_value_error(
         RagAgent(store=indexed_store, llm=fake_llm, **params)  # type: ignore[arg-type]
 
 
-def test_isolated_mode_is_not_implemented_yet(
-    indexed_store: VectorStore, fake_llm: FakeLLM
+# --- Modo aislado (T7) -------------------------------------------------------------
+
+VACATION_QUESTION = "How many unused vacation days can employees carry over?"
+
+
+@pytest.mark.parametrize("agent_id", AGENT_IDS)
+def test_isolated_agent_retrieves_only_its_own_chunks(
+    indexed_store: VectorStore, fake_llm: FakeLLM, agent_id: str
 ) -> None:
-    # Decisión: falla al construir (fail-fast), antes de cualquier recuperación.
-    with pytest.raises(NotImplementedError):
-        RagAgent("faq", indexed_store, fake_llm, threshold=0.5, top_k=TOP_K, isolated=True)
+    agent = RagAgent(
+        agent_id, indexed_store, fake_llm, threshold=GENEROUS_THRESHOLD, top_k=TOP_K,
+        isolated=True,
+    )
+
+    for question in (SHIPPING_QUESTION, VACATION_QUESTION):
+        response = agent.ask(question)
+        assert len(response.retrieved) == TOP_K
+        assert {c.agent_id for c in response.retrieved} == {agent_id}

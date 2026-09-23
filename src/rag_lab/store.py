@@ -1,8 +1,9 @@
 """Vector store sobre Chroma para los documentos de los agentes.
 
-ATENCIÓN — versión con el bug intencional de contaminación de contexto: todos los
-agentes comparten UNA sola colección y `VectorStore.query` no filtra por agente.
-El arreglo (filtro por `agent_id`) se implementa en T7.
+Todos los agentes comparten UNA sola colección. `VectorStore.query` aísla por agente
+en la capa de datos cuando recibe `agent_id` (filtro `where` de Chroma). Con
+`agent_id=None` conserva el modo shared, con el bug intencional de contaminación de
+contexto; se mantiene disponible para el informe antes/después.
 """
 
 from __future__ import annotations
@@ -11,9 +12,10 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from chromadb.api import ClientAPI
+from chromadb.api.types import Where
 from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 
-from rag_lab.corpus import Document
+from rag_lab.corpus import AGENT_IDS, Document
 
 DEFAULT_COLLECTION_NAME = "knowledge_base"
 
@@ -38,8 +40,9 @@ class VectorStore:
     `title + "\n" + text`, así que `Chunk.text` incluye el título; `agent_id` y
     `title` van en la metadata.
 
-    BUG INTENCIONAL (se arregla en T7): los documentos de TODOS los agentes
-    viven en la misma colección y `query` no tiene noción del agente que
+    Los documentos de TODOS los agentes viven en la misma colección. El
+    aislamiento se aplica en `query` filtrando por `agent_id`. BUG INTENCIONAL
+    (modo shared): con `agent_id=None`, `query` no tiene noción del agente que
     pregunta, por lo que el agente faq puede recuperar documentos de
     seguimiento (contaminación de contexto).
     """
@@ -67,21 +70,26 @@ class VectorStore:
         """Número de documentos indexados en la colección."""
         return self._collection.count()
 
-    def query(self, text: str, k: int) -> list[Chunk]:
+    def query(self, text: str, k: int, *, agent_id: str | None) -> list[Chunk]:
         """Devuelve los `k` chunks más cercanos, ordenados por distancia ascendente.
 
-        BUG INTENCIONAL (se arregla en T7): busca en los documentos de TODOS los
-        agentes, sin filtro por `agent_id`. Si el store está vacío devuelve `[]`;
-        si hay menos de `k` documentos, devuelve todos.
+        `agent_id` es obligatorio y solo por nombre, para que el modo shared sea
+        una elección explícita. Con un `agent_id` solo busca entre los documentos
+        de ese agente (filtro `where={"agent_id": agent_id}` de Chroma); uno
+        desconocido lanza `ValueError`. BUG INTENCIONAL (modo shared): con
+        `agent_id=None` busca en los documentos de TODOS los agentes, sin filtro.
+        Si no hay documentos candidatos devuelve `[]`; si hay menos de `k`,
+        devuelve todos (Chroma 1.5.9 admite `n_results` mayor que los candidatos).
         """
         if k < 1:
             raise ValueError(f"k debe ser >= 1, se recibió {k}")
-        total = self._collection.count()
-        if total == 0:
-            return []
+        if agent_id is not None and agent_id not in AGENT_IDS:
+            raise ValueError(f"agent_id {agent_id!r} desconocido; válidos: {AGENT_IDS}")
+        where: Where | None = None if agent_id is None else {"agent_id": agent_id}
         result = self._collection.query(
             query_texts=[text],
-            n_results=min(k, total),
+            n_results=k,
+            where=where,
             include=["documents", "metadatas", "distances"],
         )
         ids = result["ids"][0]
