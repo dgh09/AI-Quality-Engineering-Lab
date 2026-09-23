@@ -21,6 +21,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["tests"]
 addopts = "-m 'not llm_eval' --strict-markers"
 markers = [
     "llm_eval: evaluaciones que llaman a un LLM real; se corren con -m llm_eval",

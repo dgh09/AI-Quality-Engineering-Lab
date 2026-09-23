@@ -7,6 +7,7 @@ from collections.abc import Iterator
 
 import chromadb
 import pytest
+from fakes import FakeLLM
 
 from rag_lab.corpus import Document, load_documents
 from rag_lab.store import VectorStore
@@ -47,3 +48,9 @@ def indexed_store(
     vector_store.index(documents)
     yield vector_store
     chroma_client.delete_collection(name)
+
+
+@pytest.fixture
+def fake_llm() -> FakeLLM:
+    """FakeLLM nuevo por prueba, con la respuesta fija `FakeLLM.DEFAULT_ANSWER`."""
+    return FakeLLM()
