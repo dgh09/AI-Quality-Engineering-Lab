@@ -144,7 +144,7 @@ Formato: **ID — título** · depende de · verificación.
   `python -m rag_lab --out reports/report.md` corre métricas deterministas en ambos modos y escribe el reporte; `--with-llm` añade la evaluación con juez. Si Ollama no responde, mensaje claro y código de salida ≠ 0.
   *Verificación*: `pytest tests/test_cli.py` (modo determinista sobre `tmp_path`) y `.venv\Scripts\python -m rag_lab --out reports/report.md` crea el archivo con contaminación > 0 antes y = 0 después.
 
-- [ ] **T14 — Evaluaciones con LLM real** · depende de: T13
+- [x] **T14 — Evaluaciones con LLM real** · depende de: T13
   `tests/llm_eval/test_quality.py` con `@pytest.mark.llm_eval`: corre la suite en modo `isolated` con el juez real, 3 ejecuciones por caso, y afirma que la proporción de casos que pasan ≥ `PASS_RATE_THRESHOLD`. `skip` con motivo claro si Ollama no está disponible.
   *Verificación*: `pytest` → no las ejecuta (deselected); `pytest -m llm_eval` → skip limpio sin Ollama, o resultado real con Ollama.
 
