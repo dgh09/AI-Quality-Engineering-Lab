@@ -92,7 +92,7 @@ Formato: **ID — título** · depende de · verificación.
   `config.py` con `Settings.from_env()`: `LLM_BASE_URL` (def. `http://localhost:11434/v1`), `LLM_API_KEY` (def. `ollama`), `GENERATOR_MODEL` y `JUDGE_MODEL` (def. `qwen2.5:3b`), `RELEVANCE_THRESHOLD`, `TOP_K` (def. 3), `RUNS_PER_CASE` (def. 3), `PASS_RATE_THRESHOLD` (def. 0.67). Carga `.env` con python-dotenv. Valores inválidos → `ValueError` claro.
   *Verificación*: `pytest tests/test_config.py` — defaults, override por `monkeypatch.setenv`, valor inválido lanza error.
 
-- [ ] **T2 — Corpus de documentos** · depende de: T0
+- [x] **T2 — Corpus de documentos** · depende de: T0
   `data/faq_docs.json` y `data/seguimiento_docs.json` (8 docs cortos cada uno, en inglés), `corpus.load_documents()` que valida ids únicos, `agent_id` ∈ {faq, seguimiento}, texto no vacío → `CorpusError`.
   *Verificación*: `pytest tests/test_corpus.py` — 8+8 docs, ids únicos, `agent_id` correcto por archivo, JSON inválido lanza `CorpusError`.
 

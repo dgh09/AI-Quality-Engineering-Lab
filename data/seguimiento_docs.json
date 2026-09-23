@@ -1,0 +1,50 @@
+[
+  {
+    "id": "seg-01",
+    "agent_id": "seguimiento",
+    "title": "Requesting paid vacation days",
+    "text": "Full-time employees accrue 15 paid vacation days per year, and up to 5 unused days can be carried over to the next year. Submit vacation requests in the PeopleHub HR portal at least 14 calendar days in advance so your direct supervisor can approve them. Requests longer than 10 consecutive working days also need approval from the department manager."
+  },
+  {
+    "id": "seg-02",
+    "agent_id": "seguimiento",
+    "title": "Reporting overtime hours",
+    "text": "Hourly employees must log overtime in PeopleHub under 'Time Entries' no later than 48 hours after the shift ends. Overtime is paid at 1.5 times the base hourly rate and requires prior authorization from the shift supervisor. Employees may work at most 10 overtime hours per week."
+  },
+  {
+    "id": "seg-03",
+    "agent_id": "seguimiento",
+    "title": "Sick leave and medical certificates",
+    "text": "Employees who are sick must notify their supervisor before the start of their shift and register the absence in PeopleHub the same day. Each employee has 8 paid sick days per year. Absences longer than 2 consecutive days require a medical certificate uploaded to PeopleHub within 3 working days of returning to work."
+  },
+  {
+    "id": "seg-04",
+    "agent_id": "seguimiento",
+    "title": "Paid and unpaid personal leave",
+    "text": "Employees receive 3 paid personal leave days per year for events such as bereavement, jury duty, or moving house, requested with form HR-07 in PeopleHub. Unpaid leave of up to 30 days can be granted once per year with approval from HR and the department manager. Unpaid leave pauses vacation accrual for its duration."
+  },
+  {
+    "id": "seg-05",
+    "agent_id": "seguimiento",
+    "title": "Swapping shifts with a coworker",
+    "text": "Warehouse and store staff can swap a scheduled shift with a coworker in the same role by submitting a Shift Swap request in PeopleHub at least 72 hours before the shift. Both employees must accept the swap and the shift supervisor must approve it. A shift swap cannot push either employee above 48 scheduled hours in a week."
+  },
+  {
+    "id": "seg-06",
+    "agent_id": "seguimiento",
+    "title": "Parental leave for new parents",
+    "text": "Employees with at least 12 months of service are entitled to 16 weeks of paid parental leave after the birth or adoption of a child. Notify HR through form HR-12 in PeopleHub at least 30 days before the expected start date. Parental leave can be split into at most two blocks within the child's first year."
+  },
+  {
+    "id": "seg-07",
+    "agent_id": "seguimiento",
+    "title": "Remote work days for office employees",
+    "text": "Office-based employees may work remotely up to 2 days per week once their probation period ends. Remote days must be registered in the PeopleHub team calendar by Friday of the previous week and agreed with the team lead. Warehouse and retail store staff are not eligible for remote work."
+  },
+  {
+    "id": "seg-08",
+    "agent_id": "seguimiento",
+    "title": "Payroll cutoff for reporting employee pay changes",
+    "text": "All employee pay changes (overtime, absences, leave, and shift swaps) must be approved in PeopleHub by the payroll cutoff on the 20th of each month to be included in that month's payroll. Pay changes approved after the cutoff are paid in the following month's payroll. Salaries are deposited on the last business day of the month."
+  }
+]

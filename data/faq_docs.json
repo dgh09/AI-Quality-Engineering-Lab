@@ -1,0 +1,50 @@
+[
+  {
+    "id": "faq-01",
+    "agent_id": "faq",
+    "title": "Shipping options and delivery times",
+    "text": "Northwind Outfitters ships orders within the continental US using Standard Shipping (5-7 business days) or Express Shipping (2 business days, $14.95). Standard Shipping is free on orders over $75; below that it costs $6.95. Orders placed before 1 p.m. Eastern Time leave our warehouse the same business day."
+  },
+  {
+    "id": "faq-02",
+    "agent_id": "faq",
+    "title": "Returning a product for a refund",
+    "text": "Customers can return unused gear in its original packaging within 60 days of delivery. Start a return from the Orders page of your account to print a prepaid return label; a $5.95 label fee is deducted from the refund unless the item arrived defective. Refunds go back to the original payment method within 5-7 business days after the package is received at our warehouse."
+  },
+  {
+    "id": "faq-03",
+    "agent_id": "faq",
+    "title": "Accepted payment methods at checkout",
+    "text": "At checkout we accept Visa, Mastercard, American Express, Discover, PayPal, and Apple Pay. Customers can also split any purchase over $100 into four interest-free installments with Klarna. Your card is only charged when the order ships, not when it is placed."
+  },
+  {
+    "id": "faq-04",
+    "agent_id": "faq",
+    "title": "Resetting your customer account password",
+    "text": "To reset your password, click 'Forgot password?' on the Sign In page and enter the email address on your customer account. The reset link we email you expires after 30 minutes. After five failed sign-in attempts the account is locked for 15 minutes to protect your order history and saved addresses."
+  },
+  {
+    "id": "faq-05",
+    "agent_id": "faq",
+    "title": "Cancelling or changing an order after purchase",
+    "text": "You can cancel an order or change its shipping address for up to 2 hours after purchase using the 'Modify order' button in the order confirmation email. Once an order has status 'Packed' it can no longer be changed; refuse the delivery or start a return instead. Contact customer support by live chat for changes to items or sizes."
+  },
+  {
+    "id": "faq-06",
+    "agent_id": "faq",
+    "title": "Product warranty for tents, backpacks and jackets",
+    "text": "Northwind-brand tents, backpacks, and jackets carry a 2-year limited warranty against manufacturing defects such as broken zippers, seam failures, or delaminated fabric. Submit a warranty claim with a photo of the defect and your order number through the Warranty Claim form on our website. Damage from normal wear, misuse, or accidents is not covered."
+  },
+  {
+    "id": "faq-07",
+    "agent_id": "faq",
+    "title": "Gift cards and store credit",
+    "text": "Digital gift cards are available from $25 to $500 and are delivered by email within one hour of purchase. Gift cards never expire and can be combined with one promo code per order. Gift cards cannot be exchanged for cash, and a lost gift card code can be reissued only with the original purchase receipt."
+  },
+  {
+    "id": "faq-08",
+    "agent_id": "faq",
+    "title": "Buy online, pick up in store",
+    "text": "Choose 'Store Pickup' at checkout to collect your order for free at any of our 12 retail stores. You will receive a text message when the order is ready, usually within 4 hours. Bring a photo ID and your order number; unclaimed pickup orders are cancelled and refunded after 7 days."
+  }
+]
