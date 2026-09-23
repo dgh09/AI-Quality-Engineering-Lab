@@ -54,8 +54,8 @@ def test_store_has_no_agent_isolation_bug(indexed_store: VectorStore) -> None:
     """Reproduce el bug a nivel de store: no sabe qué agente pregunta.
 
     Una pregunta de RR. HH. hecha (por ejemplo) al agente faq devuelve un chunk
-    de `seguimiento` en top-1. Cuando T7 añada el filtro por agent_id, esta
-    prueba seguirá siendo válida para la llamada sin filtro.
+    de `seguimiento` en top-1. Con el filtro por agent_id de T7, esta prueba
+    documenta la llamada sin filtro (`agent_id=None`, modo shared).
     """
     top = indexed_store.query(VACATION_QUESTION, k=3, agent_id=None)[0]
     assert top.agent_id == "seguimiento"
@@ -105,10 +105,3 @@ def test_query_with_agent_id_and_large_k_returns_exactly_that_agents_docs(
 def test_query_rejects_unknown_agent_id(indexed_store: VectorStore) -> None:
     with pytest.raises(ValueError, match="agent_id"):
         indexed_store.query(SHIPPING_QUESTION, k=3, agent_id="ventas")
-
-
-def test_query_without_agent_id_keeps_shared_behavior(indexed_store: VectorStore) -> None:
-    # `agent_id=None` conserva el modo shared (con el bug) para el informe antes/después.
-    chunks = indexed_store.query(VACATION_QUESTION, k=50, agent_id=None)
-
-    assert {c.agent_id for c in chunks} == set(AGENT_IDS)

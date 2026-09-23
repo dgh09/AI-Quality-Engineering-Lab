@@ -4,8 +4,8 @@ En el modo `shared` (vector store compartido sin filtro por agente) las asercion
 fallan a propósito: están marcadas `xfail(strict=True)` para que el bug quede
 documentado y, si alguien lo arregla sin querer, la suite lo señale (XPASS → fallo).
 
-Cuando exista el modo aislado basta con AÑADIR su parámetro a `MODES`; las
-aserciones no deben modificarse.
+El modo `isolated` (T7) se añadió a `MODES` sin modificar las aserciones: en él
+deben pasar.
 """
 
 from __future__ import annotations
@@ -116,8 +116,9 @@ def test_shared_store_leaks_other_agent_chunks(make_agent: AgentFactory) -> None
             reached_llm.append(case.id)
     # La fuga en la recuperación se exige para CADA caso. El impacto en el prompt
     # (chunk ajeno dentro del umbral → llega al LLM) depende de la calibración del
-    # umbral (T8 puede moverlo; gs-10 está a ~0.47 de 0.5), así que basta con que
-    # ocurra en al menos un caso cruzado para demostrar que el bug alcanza al LLM.
+    # umbral (calibrado en T8 a 0.6; hoy gs-09 y gs-10 quedan dentro, a ~0.34 y
+    # ~0.47), así que basta con que ocurra en al menos un caso cruzado para
+    # demostrar que el bug alcanza al LLM.
     assert reached_llm, (
         "ningún caso de dominio cruzado llevó un chunk ajeno al contexto del LLM "
         f"(casos: {[c.id for c in CROSS_DOMAIN_CASES]})"
