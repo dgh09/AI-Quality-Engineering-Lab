@@ -128,7 +128,7 @@ Formato: **ID — título** · depende de · verificación.
   `llm.LLMClient` (Protocol `complete(system, user, json_mode=False) -> str`) y `OpenAICompatibleClient(settings, model)` usando el SDK `openai` con `base_url` y `api_key` de `Settings`; `json_mode` → `response_format={"type": "json_object"}`; timeout; errores del SDK → `LLMError`.
   *Verificación*: `pytest tests/test_llm.py` — SDK simulado: parámetros correctos (modelo, base_url, response_format), error de conexión → `LLMError`. Sin red.
 
-- [ ] **T10 — Juez LLM con rúbrica** · depende de: T9
+- [x] **T10 — Juez LLM con rúbrica** · depende de: T9
   `judge.Judge(llm).evaluate(question, context, answer, expected_behavior) -> Verdict` con `faithfulness`, `relevance`, `abstention` (`Score(score: float, justification: str)`). Prompt con rúbrica explícita y formato JSON exigido. JSON inválido o score fuera de [0,1] → un reintento, luego `JudgeError`. `Verdict.passed(expected_behavior, min_score=0.7)`: `answer` → fidelidad y relevancia ≥ min; `abstain` → abstención ≥ min.
   *Verificación*: `pytest tests/test_judge.py` — JSON válido parseado, inválido→reintento→éxito, inválido dos veces→`JudgeError`, score 1.4→rechazado, reglas de `passed`.
 
