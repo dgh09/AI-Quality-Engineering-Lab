@@ -13,8 +13,13 @@ from dotenv import dotenv_values
 DEFAULT_LLM_BASE_URL = "http://localhost:11434/v1"
 DEFAULT_LLM_API_KEY = "ollama"  # Ollama ignora la key; no es un secreto real.
 DEFAULT_MODEL = "qwen2.5:3b"
-# Valor provisional: se calibra en una tarea posterior.
-DEFAULT_RELEVANCE_THRESHOLD = 0.5
+# Calibrado con scripts/calibrate_threshold.py (distancia coseno top-1, all-MiniLM-L6-v2,
+# modo isolated): los casos 'answer' del golden set llegan como máximo a 0.4601 (gs-01) y
+# los 'abstain' empiezan en 0.7734 (gs-09, dominio cruzado). 0.6 queda cerca del punto
+# medio (~0.617), con margen de 0.14 sobre el peor 'answer' y de 0.17 bajo el 'abstain'
+# más cercano. En modo shared las preguntas cruzadas encuentran el documento del otro
+# agente a 0.34 (gs-09) y 0.47 (gs-10), dentro del umbral: el bug llega al LLM.
+DEFAULT_RELEVANCE_THRESHOLD = 0.6
 DEFAULT_TOP_K = 3
 DEFAULT_RUNS_PER_CASE = 3
 DEFAULT_PASS_RATE_THRESHOLD = 0.67

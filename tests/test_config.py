@@ -30,7 +30,7 @@ def test_defaults_when_env_is_empty(clean_env: pytest.MonkeyPatch) -> None:
     assert settings.llm_api_key == "ollama"
     assert settings.generator_model == "qwen2.5:3b"
     assert settings.judge_model == "qwen2.5:3b"
-    assert settings.relevance_threshold == 0.5
+    assert settings.relevance_threshold == 0.6
     assert settings.top_k == 3
     assert settings.runs_per_case == 3
     assert settings.pass_rate_threshold == 0.67

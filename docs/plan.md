@@ -119,7 +119,7 @@ Formato: **ID — título** · depende de · verificación.
   `store.query(text, k, *, agent_id)` (obligatorio, solo por nombre; `None` = modo shared) aplica `where={"agent_id": agent_id}` cuando no es `None`; `RagAgent(isolated=True)` siempre lo pasa. Se **añade** el parámetro `isolated` a `test_isolation.py` (las aserciones existentes no se tocan).
   *Verificación*: `pytest tests/test_isolation.py tests/test_store.py -rxX` → casos `isolated` `passed`, casos `shared` siguen `xfailed`.
 
-- [ ] **T8 — Calibración del umbral y golden set determinista** · depende de: T7
+- [x] **T8 — Calibración del umbral y golden set determinista** · depende de: T7
   `scripts/calibrate_threshold.py` imprime la distancia top-1 de cada pregunta en ambos modos. Se fija el default de `RELEVANCE_THRESHOLD` en `config.py` con la justificación en un comentario. `tests/test_golden_deterministic.py`: en modo `isolated`, con `FakeLLM`, los 12 casos se abstienen o responden según `expected_behavior`, y los in-domain recuperan su `expected_source_ids` en top-k.
   *Verificación*: salida del script pegada en el reporte del subagente + `pytest tests/test_golden_deterministic.py` → 12 passed.
   *Condición de parada*: si ningún umbral separa limpiamente los casos, el implementador se detiene y reporta las distancias (no ajusta datos por su cuenta).
