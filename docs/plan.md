@@ -136,7 +136,7 @@ Formato: **ID — título** · depende de · verificación.
   `evaluation.run_case(agent, judge, case, runs) -> CaseResult(pass_rate, passed, verdicts)` y `run_suite(...)`; un error del juez cuenta como ejecución fallida (se registra, no se oculta). `deterministic_metrics(agent_by_id, cases)` → tasa de contaminación y exactitud de abstención (sin LLM).
   *Verificación*: `pytest tests/test_evaluation.py` — con fakes secuenciales: 2/3 → pasa con umbral 0.67, 1/3 → falla; `JudgeError` cuenta como fallo; métricas deterministas correctas sobre un escenario fijo.
 
-- [ ] **T12 — Reporte Markdown** · depende de: T11
+- [x] **T12 — Reporte Markdown** · depende de: T11
   `report.render_markdown(before, after) -> str`: tabla de métricas deterministas (contaminación, abstención) antes/después y, si existen, tabla de evaluación LLM por caso (tasa de éxito, pasa/no pasa, justificación breve del juez).
   *Verificación*: `pytest tests/test_report.py` — contiene secciones "Antes (shared)" y "Después (isolated)", números esperados, y omite la sección LLM si no hay resultados.
 
