@@ -115,8 +115,8 @@ Formato: **ID — título** · depende de · verificación.
   Además, una prueba no-xfail que afirma explícitamente que en `shared` la pregunta cruzada trae chunks `seguimiento` (reproducción del bug).
   *Verificación*: `pytest tests/test_isolation.py -rxX` → reproducción `passed`, aserciones correctas `xfailed` (fallan de verdad, y strict impide que pasen en silencio).
 
-- [ ] **T7 — Arreglo: aislamiento en la capa de datos** · depende de: T6
-  `store.query(text, k, agent_id=None)` aplica `where={"agent_id": agent_id}` cuando se pasa; `RagAgent(isolated=True)` siempre lo pasa. Se **añade** el parámetro `isolated` a `test_isolation.py` (las aserciones existentes no se tocan).
+- [x] **T7 — Arreglo: aislamiento en la capa de datos** · depende de: T6
+  `store.query(text, k, *, agent_id)` (obligatorio, solo por nombre; `None` = modo shared) aplica `where={"agent_id": agent_id}` cuando no es `None`; `RagAgent(isolated=True)` siempre lo pasa. Se **añade** el parámetro `isolated` a `test_isolation.py` (las aserciones existentes no se tocan).
   *Verificación*: `pytest tests/test_isolation.py tests/test_store.py -rxX` → casos `isolated` `passed`, casos `shared` siguen `xfailed`.
 
 - [ ] **T8 — Calibración del umbral y golden set determinista** · depende de: T7
