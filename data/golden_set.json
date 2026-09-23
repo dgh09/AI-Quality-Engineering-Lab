@@ -1,0 +1,98 @@
+[
+  {
+    "id": "gs-01",
+    "agent_id": "faq",
+    "question": "How much extra does Express Shipping cost, and how many business days does it take?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["faq-01"]
+  },
+  {
+    "id": "gs-02",
+    "agent_id": "faq",
+    "question": "How long do I have to send back gear I haven't used, and will I be charged for the return label?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["faq-02"]
+  },
+  {
+    "id": "gs-03",
+    "agent_id": "faq",
+    "question": "How long is the password reset email link valid, and what happens if I keep typing the wrong password?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["faq-04"]
+  },
+  {
+    "id": "gs-04",
+    "agent_id": "faq",
+    "question": "The zipper on my Northwind backpack broke. How long is the warranty and what do I need to file a claim?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["faq-06"]
+  },
+  {
+    "id": "gs-05",
+    "agent_id": "seguimiento",
+    "question": "How many paid vacation days does a full-time employee earn per year, and how far in advance do I have to request them?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["seg-01"]
+  },
+  {
+    "id": "gs-06",
+    "agent_id": "seguimiento",
+    "question": "What rate is overtime paid at, and what is the deadline for logging my overtime hours?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["seg-02"]
+  },
+  {
+    "id": "gs-07",
+    "agent_id": "seguimiento",
+    "question": "I'm adopting a child next spring. How many weeks of paid parental leave can I take, and when do I need to tell HR?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["seg-06"]
+  },
+  {
+    "id": "gs-08",
+    "agent_id": "seguimiento",
+    "question": "By what day of the month must a pay change be approved to be included in that month's payroll?",
+    "category": "in_domain",
+    "expected_behavior": "answer",
+    "expected_source_ids": ["seg-08"]
+  },
+  {
+    "id": "gs-09",
+    "agent_id": "faq",
+    "question": "As an employee, how many of my unused vacation days can I carry over to next year?",
+    "category": "cross_domain",
+    "expected_behavior": "abstain",
+    "expected_source_ids": ["seg-01"]
+  },
+  {
+    "id": "gs-10",
+    "agent_id": "seguimiento",
+    "question": "Can I pay for my order with PayPal, or split the purchase into installments?",
+    "category": "cross_domain",
+    "expected_behavior": "abstain",
+    "expected_source_ids": ["faq-03"]
+  },
+  {
+    "id": "gs-11",
+    "agent_id": "faq",
+    "question": "What will the weather be like in Paris this weekend?",
+    "category": "out_of_domain",
+    "expected_behavior": "abstain",
+    "expected_source_ids": []
+  },
+  {
+    "id": "gs-12",
+    "agent_id": "seguimiento",
+    "question": "What is a good recipe for chocolate chip cookies?",
+    "category": "out_of_domain",
+    "expected_behavior": "abstain",
+    "expected_source_ids": []
+  }
+]

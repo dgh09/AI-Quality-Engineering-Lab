@@ -96,7 +96,7 @@ Formato: **ID — título** · depende de · verificación.
   `data/faq_docs.json` y `data/seguimiento_docs.json` (8 docs cortos cada uno, en inglés), `corpus.load_documents()` que valida ids únicos, `agent_id` ∈ {faq, seguimiento}, texto no vacío → `CorpusError`.
   *Verificación*: `pytest tests/test_corpus.py` — 8+8 docs, ids únicos, `agent_id` correcto por archivo, JSON inválido lanza `CorpusError`.
 
-- [ ] **T3 — Golden set** · depende de: T2
+- [x] **T3 — Golden set** · depende de: T2
   `data/golden_set.json` con 12 casos: 4 in-domain faq, 4 in-domain seguimiento, 2 de dominio cruzado (uno por agente, `expected_behavior: abstain`), 2 fuera de dominio (`abstain`). `corpus.load_golden_set()` valida que los `expected_source_ids` existan y pertenezcan al mismo `agent_id`.
   *Verificación*: `pytest tests/test_corpus.py` — 12 casos, distribución por categoría, referencias válidas.
 
