@@ -148,7 +148,7 @@ Formato: **ID — título** · depende de · verificación.
   `tests/llm_eval/test_quality.py` con `@pytest.mark.llm_eval`: corre la suite en modo `isolated` con el juez real, 3 ejecuciones por caso, y afirma que la proporción de casos que pasan ≥ `PASS_RATE_THRESHOLD`. `skip` con motivo claro si Ollama no está disponible.
   *Verificación*: `pytest` → no las ejecuta (deselected); `pytest -m llm_eval` → skip limpio sin Ollama, o resultado real con Ollama.
 
-- [ ] **T15 — README** · depende de: T13 (y T14 si hay Ollama)
+- [x] **T15 — README** · depende de: T13 (y T14 si hay Ollama)
   Qué hace, requisitos (incl. Ollama en Docker y `docker exec <contenedor> ollama pull qwen2.5:3b`), instalación, cómo correr pruebas deterministas / `llm_eval` / reporte, resultados antes/después (pegados del reporte generado) y sección vacía **"Lecciones aprendidas"**.
   *Verificación*: seguir los comandos del README desde cero en un venv limpio funciona; el revisor final lo confirma.
 

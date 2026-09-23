@@ -4,6 +4,6 @@
 __pycache__/
 *.egg-info/
 .pytest_cache/
-# Reportes generados por la CLI (python -m rag_lab). T15 decide si se versiona alguno
-# para el README con una excepción del tipo !reports/<archivo>.md.
+# Reportes generados por la CLI (python -m rag_lab). No se versionan: los resultados de
+# referencia están pegados en el README (T15).
 reports/*.md
