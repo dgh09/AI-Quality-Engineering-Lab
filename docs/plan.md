@@ -88,7 +88,7 @@ Formato: **ID — título** · depende de · verificación.
   `git init`, `pyproject.toml` (chromadb, openai, python-dotenv; dev: pytest), `.gitignore`, `.env.example`, paquete vacío `rag_lab`, `tests/test_smoke.py` (importa `rag_lab`), marker `llm_eval` registrado y excluido por defecto.
   *Verificación*: `pytest` → `1 passed`; `git check-ignore .env` imprime `.env`; `pytest --markers` lista `llm_eval`.
 
-- [ ] **T1 — Configuración** · depende de: T0
+- [x] **T1 — Configuración** · depende de: T0
   `config.py` con `Settings.from_env()`: `LLM_BASE_URL` (def. `http://localhost:11434/v1`), `LLM_API_KEY` (def. `ollama`), `GENERATOR_MODEL` y `JUDGE_MODEL` (def. `qwen2.5:3b`), `RELEVANCE_THRESHOLD`, `TOP_K` (def. 3), `RUNS_PER_CASE` (def. 3), `PASS_RATE_THRESHOLD` (def. 0.67). Carga `.env` con python-dotenv. Valores inválidos → `ValueError` claro.
   *Verificación*: `pytest tests/test_config.py` — defaults, override por `monkeypatch.setenv`, valor inválido lanza error.
 
