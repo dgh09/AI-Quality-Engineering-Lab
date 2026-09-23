@@ -100,7 +100,7 @@ Formato: **ID — título** · depende de · verificación.
   `data/golden_set.json` con 12 casos: 4 in-domain faq, 4 in-domain seguimiento, 2 de dominio cruzado (uno por agente, `expected_behavior: abstain`), 2 fuera de dominio (`abstain`). `corpus.load_golden_set()` valida que los `expected_source_ids` existan y pertenezcan al mismo `agent_id`.
   *Verificación*: `pytest tests/test_corpus.py` — 12 casos, distribución por categoría, referencias válidas.
 
-- [ ] **T4 — Vector store (versión con el bug)** · depende de: T2
+- [x] **T4 — Vector store (versión con el bug)** · depende de: T2
   `store.VectorStore(client)`: `index(documents)` en **una sola colección** con `metadata.agent_id` y distancia coseno; `query(text, k)` → `list[Chunk(id, agent_id, text, distance)]` ordenada por distancia. Sin filtro por agente (bug intencional, documentado en docstring).
   *Verificación*: `pytest tests/test_store.py` — indexa 16, `query` devuelve `k` chunks ordenados con metadata; una pregunta de envíos trae un doc faq en top-1.
 
