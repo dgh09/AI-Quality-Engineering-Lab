@@ -132,7 +132,7 @@ Formato: **ID — título** · depende de · verificación.
   `judge.Judge(llm).evaluate(question, context, answer, expected_behavior) -> Verdict` con `faithfulness`, `relevance`, `abstention` (`Score(score: float, justification: str)`). Prompt con rúbrica explícita y formato JSON exigido. JSON inválido o score fuera de [0,1] → un reintento, luego `JudgeError`. `Verdict.passed(expected_behavior, min_score=0.7)`: `answer` → fidelidad y relevancia ≥ min; `abstain` → abstención ≥ min.
   *Verificación*: `pytest tests/test_judge.py` — JSON válido parseado, inválido→reintento→éxito, inválido dos veces→`JudgeError`, score 1.4→rechazado, reglas de `passed`.
 
-- [ ] **T11 — Evaluación con repeticiones** · depende de: T5, T10
+- [x] **T11 — Evaluación con repeticiones** · depende de: T5, T10
   `evaluation.run_case(agent, judge, case, runs) -> CaseResult(pass_rate, passed, verdicts)` y `run_suite(...)`; un error del juez cuenta como ejecución fallida (se registra, no se oculta). `deterministic_metrics(agent_by_id, cases)` → tasa de contaminación y exactitud de abstención (sin LLM).
   *Verificación*: `pytest tests/test_evaluation.py` — con fakes secuenciales: 2/3 → pasa con umbral 0.67, 1/3 → falla; `JudgeError` cuenta como fallo; métricas deterministas correctas sobre un escenario fijo.
 

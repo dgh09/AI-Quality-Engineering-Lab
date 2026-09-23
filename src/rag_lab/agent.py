@@ -27,6 +27,16 @@ _SYSTEM_PROMPT = (
 
 
 @dataclass(frozen=True)
+class Retrieval:
+    """Recuperación + compuerta de abstención, sin LLM. `context` vacío = abstenerse."""
+
+    # Todos los chunks top-k devueltos por el store.
+    retrieved: tuple[Chunk, ...]
+    # Subconjunto con distance <= threshold.
+    context: tuple[Chunk, ...]
+
+
+@dataclass(frozen=True)
 class AgentResponse:
     answer: str
     abstained: bool
@@ -86,11 +96,20 @@ class RagAgent:
         self._store = store
         self._llm = llm
 
-    def ask(self, question: str) -> AgentResponse:
-        """Recupera top-k, aplica la compuerta de abstención y, si pasa, llama al LLM."""
+    def retrieve(self, question: str) -> Retrieval:
+        """Recupera top-k (filtrado por agente si `isolated`) y aplica la compuerta.
+
+        Nunca llama al LLM; es lo que usan las métricas deterministas. `ask` se
+        abstiene exactamente cuando `context` queda vacío.
+        """
         agent_filter = self.agent_id if self.isolated else None
         retrieved = tuple(self._store.query(question, k=self.top_k, agent_id=agent_filter))
-        context = select_context(retrieved, self.threshold)
+        return Retrieval(retrieved=retrieved, context=select_context(retrieved, self.threshold))
+
+    def ask(self, question: str) -> AgentResponse:
+        """Recupera top-k, aplica la compuerta de abstención y, si pasa, llama al LLM."""
+        retrieval = self.retrieve(question)
+        retrieved, context = retrieval.retrieved, retrieval.context
         if not context:
             return AgentResponse(
                 answer=ABSTENTION_MESSAGE, abstained=True, retrieved=retrieved, context=()
