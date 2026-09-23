@@ -124,7 +124,7 @@ Formato: **ID — título** · depende de · verificación.
   *Verificación*: salida del script pegada en el reporte del subagente + `pytest tests/test_golden_deterministic.py` → 12 passed.
   *Condición de parada*: si ningún umbral separa limpiamente los casos, el implementador se detiene y reporta las distancias (no ajusta datos por su cuenta).
 
-- [ ] **T9 — Cliente LLM** · depende de: T1 *(independiente de T2–T8)*
+- [x] **T9 — Cliente LLM** · depende de: T1 *(independiente de T2–T8)*
   `llm.LLMClient` (Protocol `complete(system, user, json_mode=False) -> str`) y `OpenAICompatibleClient(settings, model)` usando el SDK `openai` con `base_url` y `api_key` de `Settings`; `json_mode` → `response_format={"type": "json_object"}`; timeout; errores del SDK → `LLMError`.
   *Verificación*: `pytest tests/test_llm.py` — SDK simulado: parámetros correctos (modelo, base_url, response_format), error de conexión → `LLMError`. Sin red.
 
