@@ -152,7 +152,7 @@ Formato: **ID — título** · depende de · verificación.
   Qué hace, requisitos (incl. Ollama en Docker y `docker exec <contenedor> ollama pull qwen2.5:3b`), instalación, cómo correr pruebas deterministas / `llm_eval` / reporte, resultados antes/después (pegados del reporte generado) y sección vacía **"Lecciones aprendidas"**.
   *Verificación*: seguir los comandos del README desde cero en un venv limpio funciona; el revisor final lo confirma.
 
-- [ ] **REVISIÓN FINAL** · depende de: todo
+- [x] **REVISIÓN FINAL** · depende de: todo
   Coherencia entre módulos, `pytest` completo en verde, README ejecutable.
 
 ## 5. Dependencias y paralelismo
